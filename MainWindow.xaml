@@ -98,11 +98,41 @@
         <Border Grid.Row="3" 
                 Background="{StaticResource MatteLightBlueBrush}" 
                 Padding="20,15">
-            <TextBlock Text="Банковское приложение SPBKIT Bank"
-                       FontSize="14"
-                       Foreground="{StaticResource MatteDarkBlueBrush}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+            <Grid>
+                <TextBlock Text="Банковское приложение SPBKIT Bank"
+                           FontSize="14"
+                           Foreground="{StaticResource MatteDarkBlueBrush}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+                
+                <!-- Скрытая кнопка тестирования - маленькая прозрачная точка в правом нижнем углу -->
+                <Button Name="btnTest"
+                        Click="btnTest_Click"
+                        Width="8"
+                        Height="8"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,5,5"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        ToolTip="Тестирование классов"
+                        Opacity="0.1">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="Transparent"
+                                    CornerRadius="4"
+                                    Width="8"
+                                    Height="8">
+                                <Border Background="{StaticResource MatteDarkBlueBrush}"
+                                        CornerRadius="4"
+                                        Width="8"
+                                        Height="8"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
         </Border>
     </Grid>
 </Window>

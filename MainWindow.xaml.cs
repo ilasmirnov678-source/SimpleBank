@@ -78,6 +78,27 @@ namespace SimpleBank
             }
         }
 
+        // Обработка нажатия кнопки "Тестирование классов": скрывает главное окно, открывает окно тестирования модально,
+        // после закрытия возвращает главное окно. При ошибке показывает сообщение и возвращает главное окно
+        private void btnTest_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                TestWindow testWindow = new TestWindow();
+                this.Hide();
+                testWindow.ShowDialog();
+                this.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии окна тестирования: {ex.Message}", 
+                              "Ошибка", 
+                              MessageBoxButton.OK, 
+                              MessageBoxImage.Error);
+                this.Show();
+            }
+        }
+
         // Обработка нажатия кнопки "Выход": устанавливает флаг, запрашивает подтверждение выхода из приложения,
         // при подтверждении закрывает приложение, при отмене сбрасывает флаг
         private void btnExit_Click(object sender, RoutedEventArgs e)
