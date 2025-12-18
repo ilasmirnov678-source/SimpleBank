@@ -95,6 +95,8 @@
     <Compile Include="View\SystemAdministratorWindow.xaml.cs">
       <DependentUpon>SystemAdministratorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\BankAccount.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
