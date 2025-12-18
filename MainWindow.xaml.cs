@@ -75,6 +75,26 @@ namespace SimpleBank
             }
         }
 
+        // Обработчик кнопки "Работа со счетами"
+        private void btnBankAccounts_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                BankAccountsWindow bankAccountsWindow = new BankAccountsWindow();
+                this.Hide();
+                bankAccountsWindow.ShowDialog();
+                this.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии окна работы со счетами: {ex.Message}", 
+                              "Ошибка", 
+                              MessageBoxButton.OK, 
+                              MessageBoxImage.Error);
+                this.Show();
+            }
+        }
+
         // Обработчик кнопки "Тестирование классов"
         private void btnTest_Click(object sender, RoutedEventArgs e)
         {

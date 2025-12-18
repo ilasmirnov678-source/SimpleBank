@@ -86,6 +86,12 @@ namespace SimpleBank.Models
             return _openingDate.AddDays(_depositTermDays);
         }
 
+        // Получение даты закрытия счета (публичный метод для доступа извне)
+        public DateTime GetDepositEndDate()
+        {
+            return CalculateDepositEndDate();
+        }
+
         // Обновление статуса по балансу
         private void UpdateStatusByBalance()
         {
