@@ -1,38 +1,35 @@
 using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace SimpleBank.View
 {
-    /// <summary>
-    /// Логика взаимодействия для AuthorizationWindow.xaml
-    /// </summary>
     public partial class AuthorizationWindow : Window
     {
+        // Роль пользователя для авторизации: "Employee" (сотрудник) или "Administrator" (администратор)
         private string _userRole;
+        // Флаг для отслеживания нажатия кнопки "Назад" - используется для предотвращения подтверждения закрытия
         private bool _isBackButtonClicked = false;
+        // Флаг для отслеживания успешной авторизации - используется для предотвращения подтверждения закрытия
         private bool _isLoginSuccessful = false;
 
-        /// <summary>
-        /// Конструктор окна авторизации
-        /// </summary>
-        /// <param name="userRole">Роль пользователя: "Employee" или "Administrator"</param>
+        // Конструктор принимает роль пользователя и сохраняет её для проверки авторизации
         public AuthorizationWindow(string userRole)
         {
             InitializeComponent();
             _userRole = userRole;
         }
 
-        /// <summary>
-        /// Обработчик кнопки "Войти"
-        /// Проверяет логин и пароль, затем открывает соответствующее окно
-        /// </summary>
+        // Обработка нажатия кнопки "Войти": проверяет введенные логин и пароль на соответствие учетным данным для роли.
+        // Для сотрудника: логин = "emp", пароль = "12345". Для администратора: логин = "admin", пароль = "admin123".
+        // При успешной авторизации закрывает окно без подтверждения и открывает соответствующее окно функционала модально.
+        // При ошибке показывает сообщение с подсказкой учетных данных, очищает поле пароля и устанавливает фокус на логин
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             string login = txtLogin.Text.Trim();
             string password = txtPassword.Password;
 
-            // Проверка на пустые поля
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Пожалуйста, введите логин и пароль!",
@@ -42,30 +39,23 @@ namespace SimpleBank.View
                 return;
             }
 
-            // Простая проверка авторизации (можно заменить на проверку из базы данных)
             bool isAuthorized = false;
 
             if (_userRole == "Employee")
             {
-                // Для сотрудника: логин = "employee", пароль = "12345"
-                isAuthorized = (login.ToLower() == "employee" && password == "12345");
+                isAuthorized = (login.ToLower() == "emp" && password == "12345");
             }
             else if (_userRole == "Administrator")
             {
-                // Для администратора: логин = "admin", пароль = "admin123"
                 isAuthorized = (login.ToLower() == "admin" && password == "admin123");
             }
 
             if (isAuthorized)
             {
-                // Установить флаг успешной авторизации
                 _isLoginSuccessful = true;
-                
-                // Закрыть окно авторизации (без подтверждения)
                 this.DialogResult = true;
                 this.Close();
 
-                // Открыть соответствующее окно функционала
                 try
                 {
                     if (_userRole == "Employee")
@@ -91,58 +81,46 @@ namespace SimpleBank.View
             {
                 MessageBox.Show("Неверный логин или пароль!\n\n" +
                                 (_userRole == "Employee" 
-                                    ? "Для сотрудника: логин = employee, пароль = 12345"
+                                    ? "Для сотрудника: логин = emp, пароль = 12345"
                                     : "Для администратора: логин = admin, пароль = admin123"),
                                 "Ошибка авторизации",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
                 
-                // Очистить поле пароля
                 txtPassword.Password = "";
                 txtLogin.Focus();
             }
         }
 
-        /// <summary>
-        /// Обработчик нажатия клавиши в поле логина
-        /// При нажатии Enter вызывает обработчик кнопки "Войти"
-        /// </summary>
-        private void txtLogin_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        // Обработка нажатия клавиши в поле логина: при нажатии Enter вызывает обработчик кнопки "Войти"
+        private void txtLogin_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 btnLogin_Click(sender, e);
             }
         }
 
-        /// <summary>
-        /// Обработчик нажатия клавиши в поле пароля
-        /// При нажатии Enter вызывает обработчик кнопки "Войти"
-        /// </summary>
-        private void txtPassword_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        // Обработка нажатия клавиши в поле пароля: при нажатии Enter вызывает обработчик кнопки "Войти"
+        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 btnLogin_Click(sender, e);
             }
         }
 
-        /// <summary>
-        /// Обработчик кнопки "Назад"
-        /// Закрывает окно авторизации и возвращает в главное меню
-        /// </summary>
+        // Обработка нажатия кнопки "Назад": устанавливает флаг и закрывает окно без подтверждения
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             _isBackButtonClicked = true;
             this.Close();
         }
 
-        /// <summary>
-        /// Обработчик события закрытия окна
-        /// </summary>
+        // Обработка события закрытия окна: если закрытие происходит не через кнопку "Назад" или успешную авторизацию,
+        // запрашивает подтверждение закрытия. При отказе отменяет закрытие
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            // Не показывать подтверждение, если закрытие происходит через кнопку "Назад" или успешную авторизацию
             if (_isBackButtonClicked || _isLoginSuccessful)
             {
                 return;

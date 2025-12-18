@@ -1,26 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.ComponentModel;
+using System.Windows;
+using SimpleBank.View;
 
 namespace SimpleBank
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        // Флаг для отслеживания нажатия кнопки "Выход" - используется для предотвращения двойного подтверждения
         private bool _isExitButtonClicked = false;
 
         public MainWindow()
@@ -28,24 +15,15 @@ namespace SimpleBank
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Обработчик кнопки "Клиент банка"
-        /// Открывает окно информации для клиента
-        /// </summary>
+        // Обработка нажатия кнопки "Клиент банка": скрывает главное окно, открывает окно информации для клиента модально,
+        // после закрытия возвращает главное окно. При ошибке показывает сообщение и возвращает главное окно
         private void btnClient_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Создать окно информации для клиента
-                View.UserInformationWindow userInfoWindow = new View.UserInformationWindow();
-                
-                // Скрыть главное окно
+                UserInformationWindow userInfoWindow = new UserInformationWindow();
                 this.Hide();
-                
-                // Показать окно клиента модально
                 userInfoWindow.ShowDialog();
-                
-                // После закрытия показать главное окно
                 this.Show();
             }
             catch (Exception ex)
@@ -54,28 +32,19 @@ namespace SimpleBank
                               "Ошибка", 
                               MessageBoxButton.OK, 
                               MessageBoxImage.Error);
-                this.Show(); // Показать главное окно в случае ошибки
+                this.Show();
             }
         }
 
-        /// <summary>
-        /// Обработчик кнопки "Сотрудник банка"
-        /// Открывает окно авторизации для сотрудника
-        /// </summary>
+        // Обработка нажатия кнопки "Сотрудник банка": скрывает главное окно, открывает окно авторизации для сотрудника модально,
+        // после закрытия возвращает главное окно. При ошибке показывает сообщение и возвращает главное окно
         private void btnEmployee_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Создать окно авторизации для сотрудника
-                View.AuthorizationWindow authWindow = new View.AuthorizationWindow("Employee");
-                
-                // Скрыть главное окно
+                AuthorizationWindow authWindow = new AuthorizationWindow("Employee");
                 this.Hide();
-                
-                // Показать окно авторизации модально
                 authWindow.ShowDialog();
-                
-                // После закрытия показать главное окно
                 this.Show();
             }
             catch (Exception ex)
@@ -84,28 +53,19 @@ namespace SimpleBank
                               "Ошибка", 
                               MessageBoxButton.OK, 
                               MessageBoxImage.Error);
-                this.Show(); // Показать главное окно в случае ошибки
+                this.Show();
             }
         }
 
-        /// <summary>
-        /// Обработчик кнопки "Системный администратор"
-        /// Открывает окно авторизации для администратора
-        /// </summary>
+        // Обработка нажатия кнопки "Системный администратор": скрывает главное окно, открывает окно авторизации для администратора модально,
+        // после закрытия возвращает главное окно. При ошибке показывает сообщение и возвращает главное окно
         private void btnAdministrator_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Создать окно авторизации для администратора
-                View.AuthorizationWindow authWindow = new View.AuthorizationWindow("Administrator");
-                
-                // Скрыть главное окно
+                AuthorizationWindow authWindow = new AuthorizationWindow("Administrator");
                 this.Hide();
-                
-                // Показать окно авторизации модально
                 authWindow.ShowDialog();
-                
-                // После закрытия показать главное окно
                 this.Show();
             }
             catch (Exception ex)
@@ -114,13 +74,12 @@ namespace SimpleBank
                               "Ошибка", 
                               MessageBoxButton.OK, 
                               MessageBoxImage.Error);
-                this.Show(); // Показать главное окно в случае ошибки
+                this.Show();
             }
         }
 
-        /// <summary>
-        /// Обработчик кнопки "Выход"
-        /// </summary>
+        // Обработка нажатия кнопки "Выход": устанавливает флаг, запрашивает подтверждение выхода из приложения,
+        // при подтверждении закрывает приложение, при отмене сбрасывает флаг
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
             _isExitButtonClicked = true;
@@ -137,18 +96,14 @@ namespace SimpleBank
             }
             else
             {
-                // Если пользователь отменил выход, сбросить флаг
                 _isExitButtonClicked = false;
             }
         }
 
-        /// <summary>
-        /// Обработчик события закрытия окна
-        /// </summary>
+        // Обработка события закрытия окна: если закрытие происходит не через кнопку "Выход" (где уже есть подтверждение),
+        // запрашивает подтверждение закрытия окна. При отказе отменяет закрытие
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            // Не показывать подтверждение закрытия окна, если закрытие происходит через кнопку "Выход"
-            // (там уже есть подтверждение выхода из приложения)
             if (_isExitButtonClicked)
             {
                 return;
@@ -162,7 +117,7 @@ namespace SimpleBank
 
             if (result == MessageBoxResult.No)
             {
-                e.Cancel = true; // Отменить закрытие
+                e.Cancel = true;
             }
         }
     }

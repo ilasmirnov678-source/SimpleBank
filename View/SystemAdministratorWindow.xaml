@@ -5,20 +5,103 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Функционал системного администратора" 
-        Height="600" 
-        Width="800"
-        MinHeight="550"
-        MinWidth="700"
+        Height="650" 
+        Width="850"
+        MinHeight="600"
+        MinWidth="750"
         WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/Resources/icon.ico"
         Closing="Window_Closing">
-    <Grid>
-        <!-- Базовый интерфейс будет реализован позже -->
-        <TextBlock Text="Функционал системного администратора" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center"
-                   FontSize="20"
-                   FontWeight="Bold"/>
+    <Grid Background="{StaticResource WhiteBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Заголовок с кнопкой "Назад" -->
+        <Border Grid.Row="0" 
+                Background="{StaticResource MatteBlueBrush}" 
+                Padding="20,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Column="0"
+                           Text="Функционал системного администратора"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource WhiteBrush}"
+                           VerticalAlignment="Center"/>
+                
+                <Button Grid.Column="1"
+                        Name="btnBack"
+                        Content="Назад"
+                        Style="{StaticResource BackButtonStyle}"
+                        Click="btnBack_Click"
+                        Width="100"/>
+            </Grid>
+        </Border>
+        
+        <!-- Область с логотипом -->
+        <Border Grid.Row="1" 
+                Background="{StaticResource MatteLightBlueBrush}" 
+                Padding="20,20">
+            <StackPanel HorizontalAlignment="Center">
+                <Image Source="pack://application:,,,/Resources/logo.png" 
+                       Width="160" 
+                       Height="80"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+                <TextBlock Text="Администратор банка"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource MatteDarkBlueBrush}"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- Основная область с функционалом -->
+        <Grid Grid.Row="2" 
+              Margin="40,30"
+              VerticalAlignment="Top">
+            <StackPanel>
+                <TextBlock Text="Добро пожаловать в систему администратора банка!"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource MatteDarkBlueBrush}"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,20"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"/>
+                
+                <TextBlock Text="Если бы это был настоящий банк, то здесь был размещен функционал для работы системного администратора:"
+                           FontSize="14"
+                           Foreground="#666666"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,15"/>
+                
+                <TextBlock Text="• Управление пользователями и ролями&#x0a;• Настройка системы безопасности&#x0a;• Мониторинг и логирование&#x0a;• Резервное копирование данных&#x0a;• Управление конфигурацией системы"
+                           FontSize="14"
+                           Foreground="#666666"
+                           TextWrapping="Wrap"
+                           Margin="20,0,0,0"/>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Подвал -->
+        <Border Grid.Row="3" 
+                Background="{StaticResource MatteLightBlueBrush}" 
+                Padding="20,15">
+            <TextBlock Text="Банковское приложение SPBKIT Bank"
+                       FontSize="12"
+                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
     </Grid>
 </Window>
-

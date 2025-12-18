@@ -2,8 +2,159 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SimpleBank"
-             StartupUri="MainWindow.xaml">
+             Startup="Application_Startup">
     <Application.Resources>
-         
+        <!-- Матовые цвета синего и белого - общие для всех окон -->
+        <SolidColorBrush x:Key="MatteBlueBrush" Color="#5B9BD5"/>
+        <SolidColorBrush x:Key="MatteDarkBlueBrush" Color="#4472C4"/>
+        <SolidColorBrush x:Key="MatteLightBlueBrush" Color="#E3F2FD"/>
+        <SolidColorBrush x:Key="WhiteBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="MatteBlueHoverBrush" Color="#4A90E2"/>
+        
+        <!-- Стиль для кнопок меню (MainWindow) -->
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource MatteBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,15"/>
+            <Setter Property="Margin" Value="0,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource MatteBlueHoverBrush}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{StaticResource MatteDarkBlueBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Стиль для кнопки выхода (MainWindow) -->
+        <Style x:Key="ExitButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource MatteDarkBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#D32F2F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Стиль для кнопки "Назад" (используется во всех окнах View) -->
+        <Style x:Key="BackButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource MatteDarkBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource MatteBlueHoverBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Стиль для кнопки "Войти" (AuthorizationWindow) -->
+        <Style x:Key="LoginButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource MatteBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="30,12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource MatteBlueHoverBrush}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{StaticResource MatteDarkBlueBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Стиль для TextBox (AuthorizationWindow) -->
+        <Style x:Key="InputTextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="BorderBrush" Value="{StaticResource MatteBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+        </Style>
+        
+        <!-- Стиль для PasswordBox (AuthorizationWindow) -->
+        <Style x:Key="InputPasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="BorderBrush" Value="{StaticResource MatteBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
     </Application.Resources>
 </Application>
