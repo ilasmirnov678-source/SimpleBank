@@ -9,9 +9,9 @@ namespace SimpleBank.View
 {
     public partial class TestWindow : Window
     {
-        // Флаг для отслеживания нажатия кнопки "Назад" - используется для предотвращения подтверждения закрытия
+        // Флаг нажатия кнопки "Назад"
         private bool _isBackButtonClicked = false;
-        // StringWriter для перехвата вывода Console.WriteLine
+        // Перехват вывода консоли
         private StringWriter _stringWriter;
         private TextWriter _originalConsoleOut;
 
@@ -21,39 +21,26 @@ namespace SimpleBank.View
             RunTests();
         }
 
-        // Запуск тестов и вывод результатов в TextBox
+        // Запуск тестов
         private void RunTests()
         {
-            // Сохраняем оригинальный вывод консоли
             _originalConsoleOut = Console.Out;
-            
-            // Создаем StringWriter для перехвата вывода
             _stringWriter = new StringWriter();
             Console.SetOut(_stringWriter);
-
-            // Запускаем тесты
             BankClassesTest.RunAllTests();
-
-            // Восстанавливаем оригинальный вывод консоли
             Console.SetOut(_originalConsoleOut);
-
-            // Получаем результаты тестов и выводим в TextBox
-            string testResults = _stringWriter.ToString();
-            txtTestResults.Text = testResults;
-
-            // Закрываем StringWriter
+            txtTestResults.Text = _stringWriter.ToString();
             _stringWriter.Close();
         }
 
-        // Обработка нажатия кнопки "Назад": устанавливает флаг и закрывает окно без подтверждения
+        // Обработчик кнопки "Назад"
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             _isBackButtonClicked = true;
             this.Close();
         }
 
-        // Обработка события закрытия окна: если закрытие происходит не через кнопку "Назад",
-        // запрашивает подтверждение закрытия окна. При отказе отменяет закрытие
+        // Обработчик закрытия окна
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_isBackButtonClicked)

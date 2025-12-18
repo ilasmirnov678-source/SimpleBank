@@ -6,8 +6,7 @@ namespace SimpleBank
 {
     public partial class App : Application
     {
-        // Обработка запуска приложения: создает и показывает заставку с логотипом на 0.5 секунды,
-        // затем закрывает заставку и открывает главное окно приложения
+        // Обработчик запуска приложения
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             SplashScreen splash = new SplashScreen("Resources/logo.png");

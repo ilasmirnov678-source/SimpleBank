@@ -6,7 +6,7 @@ namespace SimpleBank.View
 {
     public partial class UserInformationWindow : Window
     {
-        // Флаг для отслеживания нажатия кнопки "Назад" - используется для предотвращения подтверждения закрытия
+        // Флаг нажатия кнопки "Назад"
         private bool _isBackButtonClicked = false;
 
         public UserInformationWindow()
@@ -14,15 +14,14 @@ namespace SimpleBank.View
             InitializeComponent();
         }
 
-        // Обработка нажатия кнопки "Назад": устанавливает флаг и закрывает окно без подтверждения
+        // Обработчик кнопки "Назад"
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             _isBackButtonClicked = true;
             this.Close();
         }
 
-        // Обработка события закрытия окна: если закрытие происходит не через кнопку "Назад",
-        // запрашивает подтверждение закрытия. При отказе отменяет закрытие
+        // Обработчик закрытия окна
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_isBackButtonClicked)

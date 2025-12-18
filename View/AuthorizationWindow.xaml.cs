@@ -7,24 +7,20 @@ namespace SimpleBank.View
 {
     public partial class AuthorizationWindow : Window
     {
-        // Роль пользователя для авторизации: "Employee" (сотрудник) или "Administrator" (администратор)
+        // Роль пользователя
         private string _userRole;
-        // Флаг для отслеживания нажатия кнопки "Назад" - используется для предотвращения подтверждения закрытия
+        // Флаг нажатия кнопки "Назад"
         private bool _isBackButtonClicked = false;
-        // Флаг для отслеживания успешной авторизации - используется для предотвращения подтверждения закрытия
+        // Флаг успешной авторизации
         private bool _isLoginSuccessful = false;
 
-        // Конструктор принимает роль пользователя и сохраняет её для проверки авторизации
         public AuthorizationWindow(string userRole)
         {
             InitializeComponent();
             _userRole = userRole;
         }
 
-        // Обработка нажатия кнопки "Войти": проверяет введенные логин и пароль на соответствие учетным данным для роли.
-        // Для сотрудника: логин = "emp", пароль = "12345". Для администратора: логин = "admin", пароль = "admin123".
-        // При успешной авторизации закрывает окно без подтверждения и открывает соответствующее окно функционала модально.
-        // При ошибке показывает сообщение с подсказкой учетных данных, очищает поле пароля и устанавливает фокус на логин
+        // Обработчик кнопки "Войти"
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             string login = txtLogin.Text.Trim();
@@ -92,7 +88,7 @@ namespace SimpleBank.View
             }
         }
 
-        // Обработка нажатия клавиши в поле логина: при нажатии Enter вызывает обработчик кнопки "Войти"
+        // Обработчик нажатия Enter в поле логина
         private void txtLogin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -101,7 +97,7 @@ namespace SimpleBank.View
             }
         }
 
-        // Обработка нажатия клавиши в поле пароля: при нажатии Enter вызывает обработчик кнопки "Войти"
+        // Обработчик нажатия Enter в поле пароля
         private void txtPassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -110,15 +106,14 @@ namespace SimpleBank.View
             }
         }
 
-        // Обработка нажатия кнопки "Назад": устанавливает флаг и закрывает окно без подтверждения
+        // Обработчик кнопки "Назад"
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             _isBackButtonClicked = true;
             this.Close();
         }
 
-        // Обработка события закрытия окна: если закрытие происходит не через кнопку "Назад" или успешную авторизацию,
-        // запрашивает подтверждение закрытия. При отказе отменяет закрытие
+        // Обработчик закрытия окна
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_isBackButtonClicked || _isLoginSuccessful)

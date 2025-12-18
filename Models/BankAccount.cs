@@ -2,7 +2,7 @@
 
 namespace SimpleBank.Models
 {
-    // Перечисление для статуса банковского счета
+    // Статус банковского счета
     public enum AccountStatus
     {
         Open,      // Открыт
@@ -10,10 +10,10 @@ namespace SimpleBank.Models
         Bankrupt   // Банкрот
     }
 
-    // Класс для представления банковского счета
+    // Класс банковского счета
     public class BankAccount
     {
-        // Приватные поля класса
+        // Приватные поля
         private string _accountNumber;
         private DateTime _openingDate;
         private Client _owner;
@@ -21,7 +21,7 @@ namespace SimpleBank.Models
         private int _depositTermDays;
         private AccountStatus _status;
 
-        // Публичные свойства для доступа к полям
+        // Публичные свойства
         public string AccountNumber
         {
             get { return _accountNumber; }
@@ -58,7 +58,7 @@ namespace SimpleBank.Models
             set { _status = value; }
         }
 
-        // Конструктор по умолчанию: инициализирует все поля значениями по умолчанию
+        // Конструктор по умолчанию
         public BankAccount()
         {
             _accountNumber = string.Empty;
@@ -69,7 +69,7 @@ namespace SimpleBank.Models
             _status = AccountStatus.Open;
         }
 
-        // Конструктор с параметрами: принимает все необходимые параметры для инициализации счета
+        // Конструктор с параметрами
         public BankAccount(string accountNumber, DateTime openingDate, Client owner, decimal balance, int depositTermDays, AccountStatus status)
         {
             _accountNumber = accountNumber;
@@ -80,15 +80,13 @@ namespace SimpleBank.Models
             _status = status;
         }
 
-        // Приватный метод: определение даты окончания вклада
-        // Возвращает дату открытия плюс срок вклада в днях
+        // Расчет даты окончания вклада
         private DateTime CalculateDepositEndDate()
         {
             return _openingDate.AddDays(_depositTermDays);
         }
 
-        // Приватный метод: изменение статуса вклада в зависимости от суммы на счете
-        // Если баланс < 0 → статус "банкрот", если баланс = 0 и счет закрыт → "закрыт", иначе "открыт"
+        // Обновление статуса по балансу
         private void UpdateStatusByBalance()
         {
             if (_balance < 0)
@@ -105,15 +103,13 @@ namespace SimpleBank.Models
             }
         }
 
-        // Публичный метод для обновления статуса счета (используется при переводе средств на другой счет)
+        // Обновление статуса счета
         public void UpdateStatus()
         {
             UpdateStatusByBalance();
         }
 
-        // Публичный метод: пополнение счета
-        // Проверяет, что сумма пополнения > 0, увеличивает баланс и обновляет статус
-        // Возвращает true при успехе, false при ошибке
+        // Пополнение счета
         public bool Deposit(decimal amount)
         {
             if (amount <= 0)
@@ -126,10 +122,7 @@ namespace SimpleBank.Models
             return true;
         }
 
-        // Публичный метод: снятие со счета с проверкой возможности снятия
-        // Проверяет: amount > 0, Balance >= amount, Status == Open
-        // Уменьшает баланс и обновляет статус
-        // Возвращает true при успехе, false при ошибке
+        // Снятие со счета
         public bool Withdraw(decimal amount)
         {
             if (amount <= 0)
@@ -152,11 +145,7 @@ namespace SimpleBank.Models
             return true;
         }
 
-        // Публичный метод: перевод средств на другой счет с проверкой
-        // Проверяет: amount > 0, targetAccount != null, targetAccount != this,
-        // Balance >= amount, Status == Open, targetAccount.Status == Open
-        // Выполняет снятие с текущего счета и пополнение целевого счета
-        // Возвращает true при успехе, false при ошибке
+        // Перевод средств на другой счет
         public bool Transfer(BankAccount targetAccount, decimal amount)
         {
             if (amount <= 0)
@@ -189,18 +178,15 @@ namespace SimpleBank.Models
                 return false;
             }
 
-            // Выполняем перевод: снимаем с текущего счета и пополняем целевой
             _balance -= amount;
             targetAccount.Balance += amount;
-
-            // Обновляем статусы обоих счетов
             UpdateStatusByBalance();
             targetAccount.UpdateStatus();
 
             return true;
         }
 
-        // Метод вывода полной информации о счете, включая данные владельца
+        // Вывод информации о счете
         public void DisplayInfo()
         {
             Console.WriteLine("=== Информация о банковском счете ===");
@@ -227,7 +213,7 @@ namespace SimpleBank.Models
             Console.WriteLine("=====================================");
         }
 
-        // Вспомогательный метод для получения строкового представления статуса
+        // Получение строкового представления статуса
         private string GetStatusString(AccountStatus status)
         {
             switch (status)
