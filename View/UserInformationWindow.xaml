@@ -1,0 +1,21 @@
+<Window x:Class="SimpleBank.View.UserInformationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Информация для клиента" 
+        Height="500" 
+        Width="700"
+        WindowStartupLocation="CenterScreen"
+        Icon="pack://application:,,,/Resources/icon.ico"
+        Closing="Window_Closing">
+    <Grid>
+        <!-- Базовый интерфейс будет реализован позже -->
+        <TextBlock Text="Окно информации для клиента" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"
+                   FontSize="18"/>
+    </Grid>
+</Window>
+
