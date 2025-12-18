@@ -21,6 +21,8 @@ namespace SimpleBank
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool _isExitButtonClicked = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -121,6 +123,8 @@ namespace SimpleBank
         /// </summary>
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
+            _isExitButtonClicked = true;
+            
             MessageBoxResult result = MessageBox.Show(
                 "Вы уверены, что хотите выйти из приложения?",
                 "Подтверждение выхода",
@@ -131,6 +135,11 @@ namespace SimpleBank
             {
                 Application.Current.Shutdown();
             }
+            else
+            {
+                // Если пользователь отменил выход, сбросить флаг
+                _isExitButtonClicked = false;
+            }
         }
 
         /// <summary>
@@ -138,6 +147,13 @@ namespace SimpleBank
         /// </summary>
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            // Не показывать подтверждение закрытия окна, если закрытие происходит через кнопку "Выход"
+            // (там уже есть подтверждение выхода из приложения)
+            if (_isExitButtonClicked)
+            {
+                return;
+            }
+
             MessageBoxResult result = MessageBox.Show(
                 "Вы уверены, что хотите закрыть окно?",
                 "Подтверждение закрытия",
