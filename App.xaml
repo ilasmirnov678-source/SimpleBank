@@ -156,5 +156,64 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
+        
+        <!-- Стиль для TextBox в BankAccountsWindow (с оптимизированными отступами) -->
+        <Style x:Key="AccountInputTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="MinHeight" Value="42"/>
+        </Style>
+        
+        <!-- Стиль для ComboBox в BankAccountsWindow -->
+        <Style x:Key="AccountComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="BorderBrush" Value="{StaticResource MatteBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="MinHeight" Value="42"/>
+        </Style>
+        
+        <!-- Стиль для DatePicker в BankAccountsWindow -->
+        <Style x:Key="AccountDatePickerStyle" TargetType="DatePicker">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="BorderBrush" Value="{StaticResource MatteBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="MinHeight" Value="42"/>
+        </Style>
+        
+        <!-- Цвет для невалидных полей -->
+        <SolidColorBrush x:Key="ErrorBrush" Color="#FF6B6B"/>
+        <SolidColorBrush x:Key="ErrorBackgroundBrush" Color="#FFE5E5"/>
+        
+        <!-- Стиль для кнопки генерации номера счета -->
+        <Style x:Key="GenerateButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource MatteBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="4"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource MatteBlueHoverBrush}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{StaticResource MatteDarkBlueBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

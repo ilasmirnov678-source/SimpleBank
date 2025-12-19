@@ -86,17 +86,11 @@
                         Click="btnEmployee_Click"
                         Height="65"/>
                 
-                <Button Name="btnAdministrator"
-                        Content="Системный администратор"
-                        Style="{StaticResource MenuButtonStyle}"
-                        Click="btnAdministrator_Click"
-                        Height="65"/>
-                
-                <Button Name="btnBankAccounts"
-                        Content="Работа со счетами"
-                        Style="{StaticResource MenuButtonStyle}"
-                        Click="btnBankAccounts_Click"
-                        Height="65"/>
+                    <Button Name="btnAdministrator"
+                            Content="Системный администратор"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="btnAdministrator_Click"
+                            Height="65"/>
             </StackPanel>
         </Grid>
         

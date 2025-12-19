@@ -4,9 +4,9 @@ using System.Windows;
 
 namespace SimpleBank.View
 {
+    // Окно функционала сотрудника банка
     public partial class BankEmployeeWindow : Window
     {
-        // Флаг нажатия кнопки "Назад"
         private bool _isBackButtonClicked = false;
 
         public BankEmployeeWindow()
@@ -14,14 +14,34 @@ namespace SimpleBank.View
             InitializeComponent();
         }
 
-        // Обработчик кнопки "Назад"
+        // Метод обработки кнопки "Работа со счетами"
+        private void btnBankAccounts_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                BankAccountsWindow bankAccountsWindow = new BankAccountsWindow();
+                this.Hide();
+                bankAccountsWindow.ShowDialog();
+                this.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии окна работы со счетами: {ex.Message}",
+                                "Ошибка",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+                this.Show();
+            }
+        }
+
+        // Метод обработки кнопки "Назад"
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             _isBackButtonClicked = true;
             this.Close();
         }
 
-        // Обработчик закрытия окна
+        // Метод обработки закрытия окна
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_isBackButtonClicked)

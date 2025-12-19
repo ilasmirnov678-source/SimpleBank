@@ -3,10 +3,10 @@ using SimpleBank.Models;
 
 namespace SimpleBank.Models
 {
-    // Тестовый класс для проверки функциональности классов Client и BankAccount
+    // Класс тестирования функциональности классов Client и BankAccount
     public class BankClassesTest
     {
-        // Метод для запуска всех тестов
+        // Метод запуска всех тестов
         public static void RunAllTests()
         {
             Console.WriteLine("========================================");
@@ -21,7 +21,7 @@ namespace SimpleBank.Models
             Console.WriteLine("========================================");
         }
 
-        // Тестирование класса Client
+        // Метод тестирования класса Client
         private static void TestClientClass()
         {
             Console.WriteLine("--- Тестирование класса Client ---\n");
@@ -49,7 +49,7 @@ namespace SimpleBank.Models
             Console.WriteLine("✓ Свойства работают корректно\n");
         }
 
-        // Тестирование класса BankAccount
+        // Метод тестирования класса BankAccount
         private static void TestBankAccountClass()
         {
             Console.WriteLine("--- Тестирование класса BankAccount ---\n");

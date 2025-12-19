@@ -5,22 +5,21 @@ using System.Windows.Input;
 
 namespace SimpleBank.View
 {
+    // Окно авторизации пользователя
     public partial class AuthorizationWindow : Window
     {
-        // Роль пользователя
         private string _userRole;
-        // Флаг нажатия кнопки "Назад"
         private bool _isBackButtonClicked = false;
-        // Флаг успешной авторизации
         private bool _isLoginSuccessful = false;
 
         public AuthorizationWindow(string userRole)
         {
             InitializeComponent();
             _userRole = userRole;
+            this.Loaded += (s, e) => txtLogin.Focus();
         }
 
-        // Обработчик кнопки "Войти"
+        // Метод обработки кнопки "Войти"
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             string login = txtLogin.Text.Trim();
@@ -39,11 +38,11 @@ namespace SimpleBank.View
 
             if (_userRole == "Employee")
             {
-                isAuthorized = (login.ToLower() == "emp" && password == "12345");
+                isAuthorized = (login.ToLower() == "emp" && password == "123");
             }
             else if (_userRole == "Administrator")
             {
-                isAuthorized = (login.ToLower() == "admin" && password == "admin123");
+                isAuthorized = (login.ToLower() == "adm" && password == "123");
             }
 
             if (isAuthorized)
@@ -75,20 +74,20 @@ namespace SimpleBank.View
             }
             else
             {
-                MessageBox.Show("Неверный логин или пароль!\n\n" +
-                                (_userRole == "Employee" 
-                                    ? "Для сотрудника: логин = emp, пароль = 12345"
-                                    : "Для администратора: логин = admin, пароль = admin123"),
-                                "Ошибка авторизации",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Error);
+                    MessageBox.Show("Неверный логин или пароль!\n\n" +
+                                    (_userRole == "Employee" 
+                                        ? "Для сотрудника: логин = emp, пароль = 123"
+                                        : "Для администратора: логин = adm, пароль = 123"),
+                                    "Ошибка авторизации",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
                 
                 txtPassword.Password = "";
                 txtLogin.Focus();
             }
         }
 
-        // Обработчик нажатия Enter в поле логина
+        // Метод обработки нажатия Enter в поле логина
         private void txtLogin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -97,7 +96,17 @@ namespace SimpleBank.View
             }
         }
 
-        // Обработчик нажатия Enter в поле пароля
+        // Метод обработки навигации стрелками в поле логина
+        private void txtLogin_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                txtPassword.Focus();
+                e.Handled = true;
+            }
+        }
+
+        // Метод обработки нажатия Enter в поле пароля
         private void txtPassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -106,14 +115,25 @@ namespace SimpleBank.View
             }
         }
 
-        // Обработчик кнопки "Назад"
+        // Метод обработки навигации стрелками в поле пароля
+        private void txtPassword_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+            {
+                txtLogin.Focus();
+                txtLogin.CaretIndex = txtLogin.Text.Length;
+                e.Handled = true;
+            }
+        }
+
+        // Метод обработки кнопки "Назад"
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             _isBackButtonClicked = true;
             this.Close();
         }
 
-        // Обработчик закрытия окна
+        // Метод обработки закрытия окна
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_isBackButtonClicked || _isLoginSuccessful)

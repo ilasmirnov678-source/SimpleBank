@@ -4,9 +4,9 @@ using System.Windows;
 
 namespace SimpleBank.View
 {
+    // Окно функционала системного администратора
     public partial class SystemAdministratorWindow : Window
     {
-        // Флаг нажатия кнопки "Назад"
         private bool _isBackButtonClicked = false;
 
         public SystemAdministratorWindow()
@@ -14,14 +14,14 @@ namespace SimpleBank.View
             InitializeComponent();
         }
 
-        // Обработчик кнопки "Назад"
+        // Метод обработки кнопки "Назад"
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             _isBackButtonClicked = true;
             this.Close();
         }
 
-        // Обработчик закрытия окна
+        // Метод обработки закрытия окна
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_isBackButtonClicked)

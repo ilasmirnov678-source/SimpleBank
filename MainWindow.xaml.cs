@@ -5,9 +5,9 @@ using SimpleBank.View;
 
 namespace SimpleBank
 {
+    // Главное окно приложения
     public partial class MainWindow : Window
     {
-        // Флаг нажатия кнопки "Выход"
         private bool _isExitButtonClicked = false;
 
         public MainWindow()
@@ -15,7 +15,7 @@ namespace SimpleBank
             InitializeComponent();
         }
 
-        // Обработчик кнопки "Клиент банка"
+        // Метод обработки кнопки "Клиент банка"
         private void btnClient_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -35,7 +35,7 @@ namespace SimpleBank
             }
         }
 
-        // Обработчик кнопки "Сотрудник банка"
+        // Метод обработки кнопки "Сотрудник банка"
         private void btnEmployee_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -55,7 +55,7 @@ namespace SimpleBank
             }
         }
 
-        // Обработчик кнопки "Системный администратор"
+        // Метод обработки кнопки "Системный администратор"
         private void btnAdministrator_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -75,27 +75,7 @@ namespace SimpleBank
             }
         }
 
-        // Обработчик кнопки "Работа со счетами"
-        private void btnBankAccounts_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                BankAccountsWindow bankAccountsWindow = new BankAccountsWindow();
-                this.Hide();
-                bankAccountsWindow.ShowDialog();
-                this.Show();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при открытии окна работы со счетами: {ex.Message}", 
-                              "Ошибка", 
-                              MessageBoxButton.OK, 
-                              MessageBoxImage.Error);
-                this.Show();
-            }
-        }
-
-        // Обработчик кнопки "Тестирование классов"
+        // Метод обработки кнопки "Тестирование классов"
         private void btnTest_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -115,7 +95,7 @@ namespace SimpleBank
             }
         }
 
-        // Обработчик кнопки "Выход"
+        // Метод обработки кнопки "Выход"
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
             _isExitButtonClicked = true;
@@ -136,7 +116,7 @@ namespace SimpleBank
             }
         }
 
-        // Обработчик закрытия окна
+        // Метод обработки закрытия окна
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_isExitButtonClicked)

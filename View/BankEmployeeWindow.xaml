@@ -68,24 +68,33 @@
         <!-- Основная область с функционалом -->
         <Grid Grid.Row="2" 
               Margin="40,30"
-              VerticalAlignment="Top">
-            <StackPanel>
+              VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center">
                 <TextBlock Text="Добро пожаловать в систему работы сотрудника банка!"
                            FontSize="16"
                            FontWeight="SemiBold"
                            Foreground="{StaticResource MatteDarkBlueBrush}"
                            TextWrapping="Wrap"
-                           Margin="0,0,0,20"
+                           Margin="0,0,0,30"
                            HorizontalAlignment="Center"
                            TextAlignment="Center"/>
                 
-                <TextBlock Text="Если бы это был настоящий бавнк, то здесь был размещен функционал для работы сотрудника банка:"
-                           FontSize="14"
-                           Foreground="#666666"
-                           TextWrapping="Wrap"
-                           Margin="0,0,0,15"/>
+                <Button Name="btnBankAccounts"
+                        Content="Работа со счетами"
+                        Style="{StaticResource MenuButtonStyle}"
+                        Click="btnBankAccounts_Click"
+                        Height="65"
+                        Margin="0,0,0,20"/>
                 
-                <TextBlock Text="• Просмотр и обработка операций клиентов&#x0a;• Работа со счетами&#x0a;• Обработка заявок&#x0a;• Отчетность"
+                <TextBlock Text="Дополнительные функции:"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource MatteDarkBlueBrush}"
+                           TextWrapping="Wrap"
+                           Margin="0,10,0,10"/>
+                
+                <TextBlock Text="• Просмотр и обработка операций клиентов&#x0a;• Обработка заявок&#x0a;• Отчетность"
                            FontSize="14"
                            Foreground="#666666"
                            TextWrapping="Wrap"

@@ -5,15 +5,14 @@ namespace SimpleBank.Models
     // Статус банковского счета
     public enum AccountStatus
     {
-        Open,      // Открыт
-        Closed,    // Закрыт
-        Bankrupt   // Банкрот
+        Open,
+        Closed,
+        Bankrupt
     }
 
     // Класс банковского счета
     public class BankAccount
     {
-        // Приватные поля
         private string _accountNumber;
         private DateTime _openingDate;
         private Client _owner;
@@ -21,7 +20,6 @@ namespace SimpleBank.Models
         private int _depositTermDays;
         private AccountStatus _status;
 
-        // Публичные свойства
         public string AccountNumber
         {
             get { return _accountNumber; }
@@ -58,7 +56,6 @@ namespace SimpleBank.Models
             set { _status = value; }
         }
 
-        // Конструктор по умолчанию
         public BankAccount()
         {
             _accountNumber = string.Empty;
@@ -69,7 +66,6 @@ namespace SimpleBank.Models
             _status = AccountStatus.Open;
         }
 
-        // Конструктор с параметрами
         public BankAccount(string accountNumber, DateTime openingDate, Client owner, decimal balance, int depositTermDays, AccountStatus status)
         {
             _accountNumber = accountNumber;
@@ -80,19 +76,19 @@ namespace SimpleBank.Models
             _status = status;
         }
 
-        // Расчет даты окончания вклада
+        // Метод расчета даты окончания вклада
         private DateTime CalculateDepositEndDate()
         {
             return _openingDate.AddDays(_depositTermDays);
         }
 
-        // Получение даты закрытия счета (публичный метод для доступа извне)
+        // Метод получения даты закрытия счета
         public DateTime GetDepositEndDate()
         {
             return CalculateDepositEndDate();
         }
 
-        // Обновление статуса по балансу
+        // Метод обновления статуса по балансу
         private void UpdateStatusByBalance()
         {
             if (_balance < 0)
@@ -109,13 +105,13 @@ namespace SimpleBank.Models
             }
         }
 
-        // Обновление статуса счета
+        // Метод обновления статуса счета
         public void UpdateStatus()
         {
             UpdateStatusByBalance();
         }
 
-        // Пополнение счета
+        // Метод пополнения счета
         public bool Deposit(decimal amount)
         {
             if (amount <= 0)
@@ -128,7 +124,7 @@ namespace SimpleBank.Models
             return true;
         }
 
-        // Снятие со счета
+        // Метод снятия со счета
         public bool Withdraw(decimal amount)
         {
             if (amount <= 0)
@@ -151,7 +147,7 @@ namespace SimpleBank.Models
             return true;
         }
 
-        // Перевод средств на другой счет
+        // Метод перевода средств на другой счет
         public bool Transfer(BankAccount targetAccount, decimal amount)
         {
             if (amount <= 0)
@@ -169,11 +165,6 @@ namespace SimpleBank.Models
                 return false;
             }
 
-            if (_balance < amount)
-            {
-                return false;
-            }
-
             if (_status != AccountStatus.Open)
             {
                 return false;
@@ -184,15 +175,23 @@ namespace SimpleBank.Models
                 return false;
             }
 
-            _balance -= amount;
-            targetAccount.Balance += amount;
-            UpdateStatusByBalance();
-            targetAccount.UpdateStatus();
+            bool withdrawResult = this.Withdraw(amount);
+            if (!withdrawResult)
+            {
+                return false;
+            }
+
+            bool depositResult = targetAccount.Deposit(amount);
+            if (!depositResult)
+            {
+                this.Deposit(amount);
+                return false;
+            }
 
             return true;
         }
 
-        // Вывод информации о счете
+        // Метод вывода информации о счете
         public void DisplayInfo()
         {
             Console.WriteLine("=== Информация о банковском счете ===");
@@ -219,7 +218,7 @@ namespace SimpleBank.Models
             Console.WriteLine("=====================================");
         }
 
-        // Получение строкового представления статуса
+        // Метод получения строкового представления статуса
         private string GetStatusString(AccountStatus status)
         {
             switch (status)

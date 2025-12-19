@@ -5,12 +5,10 @@ namespace SimpleBank.Models
     // Класс клиента банка
     public class Client
     {
-        // Приватные поля
         private string _fullName;
         private string _passportData;
         private DateTime _dateOfBirth;
 
-        // Публичные свойства
         public string FullName
         {
             get { return _fullName; }
@@ -29,7 +27,6 @@ namespace SimpleBank.Models
             set { _dateOfBirth = value; }
         }
 
-        // Конструктор по умолчанию
         public Client()
         {
             _fullName = string.Empty;
@@ -37,7 +34,6 @@ namespace SimpleBank.Models
             _dateOfBirth = DateTime.MinValue;
         }
 
-        // Конструктор с параметрами
         public Client(string fullName, string passportData, DateTime dateOfBirth)
         {
             _fullName = fullName;
@@ -45,7 +41,7 @@ namespace SimpleBank.Models
             _dateOfBirth = dateOfBirth;
         }
 
-        // Вывод информации о клиенте
+        // Метод вывода информации о клиенте
         public void DisplayInfo()
         {
             Console.WriteLine("=== Информация о клиенте ===");

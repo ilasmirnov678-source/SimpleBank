@@ -7,11 +7,10 @@ using SimpleBank.Models;
 
 namespace SimpleBank.View
 {
+    // Окно тестирования классов
     public partial class TestWindow : Window
     {
-        // Флаг нажатия кнопки "Назад"
         private bool _isBackButtonClicked = false;
-        // Перехват вывода консоли
         private StringWriter _stringWriter;
         private TextWriter _originalConsoleOut;
 
@@ -21,7 +20,7 @@ namespace SimpleBank.View
             RunTests();
         }
 
-        // Запуск тестов
+        // Метод запуска тестов
         private void RunTests()
         {
             _originalConsoleOut = Console.Out;
@@ -33,14 +32,14 @@ namespace SimpleBank.View
             _stringWriter.Close();
         }
 
-        // Обработчик кнопки "Назад"
+        // Метод обработки кнопки "Назад"
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             _isBackButtonClicked = true;
             this.Close();
         }
 
-        // Обработчик закрытия окна
+        // Метод обработки закрытия окна
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_isBackButtonClicked)

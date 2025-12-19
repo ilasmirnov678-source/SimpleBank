@@ -74,7 +74,8 @@
                          Style="{StaticResource InputTextBoxStyle}"
                          Height="42"
                          Margin="0,0,0,15"
-                         KeyDown="txtLogin_KeyDown"/>
+                         KeyDown="txtLogin_KeyDown"
+                         PreviewKeyDown="txtLogin_PreviewKeyDown"/>
                 
                 <!-- Поле пароля -->
                 <TextBlock Text="Введите пароль:"
@@ -86,7 +87,8 @@
                              Style="{StaticResource InputPasswordBoxStyle}"
                              Height="42"
                              Margin="0,0,0,20"
-                             KeyDown="txtPassword_KeyDown"/>
+                             KeyDown="txtPassword_KeyDown"
+                             PreviewKeyDown="txtPassword_PreviewKeyDown"/>
                 
                 <!-- Кнопка "Войти" -->
                 <Button Name="btnLogin"

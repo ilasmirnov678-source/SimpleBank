@@ -72,6 +72,11 @@
                       HorizontalScrollBarVisibility="Disabled"
                       Margin="20,20">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="10"/>
@@ -79,7 +84,7 @@
                 </Grid.ColumnDefinitions>
                 
                 <!-- Секция для первого счета -->
-                <Border Grid.Column="0"
+                <Border Grid.Row="0" Grid.Column="0"
                         BorderBrush="{StaticResource MatteBlueBrush}"
                         BorderThickness="2"
                         CornerRadius="8"
@@ -103,51 +108,77 @@
                                 <TextBlock Text="Номер счета:" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
-                                <TextBox Name="txtAccount1Number"
-                                         Style="{StaticResource InputTextBoxStyle}"
-                                         Height="35"
-                                         Margin="0,0,0,10"/>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0"
+                                             Name="txtAccount1Number"
+                                             Style="{StaticResource AccountInputTextBoxStyle}"
+                                             Height="42"
+                                             MaxLength="20"
+                                             PreviewTextInput="txtAccount1Number_PreviewTextInput"
+                                             PreviewKeyDown="txtAccount1Number_PreviewKeyDown"
+                                             TextChanged="txtAccount1Number_TextChanged"
+                                             LostFocus="txtAccount1Number_LostFocus"
+                                             Margin="0,0,5,0"/>
+                                    <Button Grid.Column="1"
+                                            Name="btnGenerateAccount1Number"
+                                            Width="42"
+                                            Height="42"
+                                            Style="{StaticResource GenerateButtonStyle}"
+                                            Click="btnGenerateAccount1Number_Click"
+                                            ToolTip="Сгенерировать случайный номер счета"
+                                            Padding="0">
+                                        <Image Source="pack://application:,,,/Resources/dice.png"
+                                               Width="42"
+                                               Height="42"
+                                               Stretch="Uniform"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </Button>
+                                </Grid>
                                 
                                 <TextBlock Text="Дата открытия:" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <DatePicker Name="dpAccount1OpeningDate"
-                                            FontSize="12"
-                                            Padding="8,5"
+                                            Style="{StaticResource AccountDatePickerStyle}"
+                                            Height="42"
                                             Margin="0,0,0,10"/>
                                 
                                 <TextBlock Text="Владелец:" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <ComboBox Name="cmbAccount1Owner"
-                                          FontSize="12"
-                                          Padding="8,5"
-                                          Height="35"
+                                          Style="{StaticResource AccountComboBoxStyle}"
+                                          Height="42"
                                           Margin="0,0,0,10"/>
                                 
-                                <TextBlock Text="Начальный баланс:" 
+                                <TextBlock Text="Начальный баланс (₽):" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <TextBox Name="txtAccount1Balance"
-                                         Style="{StaticResource InputTextBoxStyle}"
-                                         Height="35"
+                                         Style="{StaticResource AccountInputTextBoxStyle}"
+                                         Height="42"
+                                         PreviewTextInput="txtAccount1Balance_PreviewTextInput"
+                                         PreviewKeyDown="txtAccount1Balance_PreviewKeyDown"
                                          Margin="0,0,0,10"/>
                                 
                                 <TextBlock Text="Срок вклада (дни):" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <TextBox Name="txtAccount1DepositTerm"
-                                         Style="{StaticResource InputTextBoxStyle}"
-                                         Height="35"
+                                         Style="{StaticResource AccountInputTextBoxStyle}"
+                                         Height="42"
                                          Margin="0,0,0,10"/>
                                 
                                 <TextBlock Text="Статус:" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <ComboBox Name="cmbAccount1Status"
-                                          FontSize="12"
-                                          Padding="8,5"
-                                          Height="35"
+                                          Style="{StaticResource AccountComboBoxStyle}"
+                                          Height="42"
                                           Margin="0,0,0,10"/>
                                 
                                 <Button Name="btnAccount1Create"
@@ -168,12 +199,14 @@
                                   Foreground="{StaticResource MatteDarkBlueBrush}"
                                   Margin="0,0,0,15">
                             <StackPanel Margin="10">
-                                <TextBlock Text="Сумма операции:" 
+                                <TextBlock Text="Сумма операции (₽):" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <TextBox Name="txtAccount1Amount"
-                                         Style="{StaticResource InputTextBoxStyle}"
-                                         Height="35"
+                                         Style="{StaticResource AccountInputTextBoxStyle}"
+                                         Height="42"
+                                         PreviewTextInput="txtAccount1Amount_PreviewTextInput"
+                                         PreviewKeyDown="txtAccount1Amount_PreviewKeyDown"
                                          Margin="0,0,0,10"/>
                                 
                                 <Grid>
@@ -273,12 +306,12 @@
                 </Border>
                 
                 <!-- Разделитель -->
-                <Border Grid.Column="1" 
+                <Border Grid.Row="0" Grid.Column="1" 
                         Background="{StaticResource MatteBlueBrush}"
                         Width="2"/>
                 
                 <!-- Секция для второго счета -->
-                <Border Grid.Column="2"
+                <Border Grid.Row="0" Grid.Column="2"
                         BorderBrush="{StaticResource MatteBlueBrush}"
                         BorderThickness="2"
                         CornerRadius="8"
@@ -302,51 +335,77 @@
                                 <TextBlock Text="Номер счета:" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
-                                <TextBox Name="txtAccount2Number"
-                                         Style="{StaticResource InputTextBoxStyle}"
-                                         Height="35"
-                                         Margin="0,0,0,10"/>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0"
+                                             Name="txtAccount2Number"
+                                             Style="{StaticResource AccountInputTextBoxStyle}"
+                                             Height="42"
+                                             MaxLength="20"
+                                             PreviewTextInput="txtAccount2Number_PreviewTextInput"
+                                             PreviewKeyDown="txtAccount2Number_PreviewKeyDown"
+                                             TextChanged="txtAccount2Number_TextChanged"
+                                             LostFocus="txtAccount2Number_LostFocus"
+                                             Margin="0,0,5,0"/>
+                                    <Button Grid.Column="1"
+                                            Name="btnGenerateAccount2Number"
+                                            Width="42"
+                                            Height="42"
+                                            Style="{StaticResource GenerateButtonStyle}"
+                                            Click="btnGenerateAccount2Number_Click"
+                                            ToolTip="Сгенерировать случайный номер счета"
+                                            Padding="0">
+                                        <Image Source="pack://application:,,,/Resources/dice.png"
+                                               Width="42"
+                                               Height="42"
+                                               Stretch="Uniform"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </Button>
+                                </Grid>
                                 
                                 <TextBlock Text="Дата открытия:" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <DatePicker Name="dpAccount2OpeningDate"
-                                            FontSize="12"
-                                            Padding="8,5"
+                                            Style="{StaticResource AccountDatePickerStyle}"
+                                            Height="42"
                                             Margin="0,0,0,10"/>
                                 
                                 <TextBlock Text="Владелец:" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <ComboBox Name="cmbAccount2Owner"
-                                          FontSize="12"
-                                          Padding="8,5"
-                                          Height="35"
+                                          Style="{StaticResource AccountComboBoxStyle}"
+                                          Height="42"
                                           Margin="0,0,0,10"/>
                                 
-                                <TextBlock Text="Начальный баланс:" 
+                                <TextBlock Text="Начальный баланс (₽):" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <TextBox Name="txtAccount2Balance"
-                                         Style="{StaticResource InputTextBoxStyle}"
-                                         Height="35"
+                                         Style="{StaticResource AccountInputTextBoxStyle}"
+                                         Height="42"
+                                         PreviewTextInput="txtAccount2Balance_PreviewTextInput"
+                                         PreviewKeyDown="txtAccount2Balance_PreviewKeyDown"
                                          Margin="0,0,0,10"/>
                                 
                                 <TextBlock Text="Срок вклада (дни):" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <TextBox Name="txtAccount2DepositTerm"
-                                         Style="{StaticResource InputTextBoxStyle}"
-                                         Height="35"
+                                         Style="{StaticResource AccountInputTextBoxStyle}"
+                                         Height="42"
                                          Margin="0,0,0,10"/>
                                 
                                 <TextBlock Text="Статус:" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <ComboBox Name="cmbAccount2Status"
-                                          FontSize="12"
-                                          Padding="8,5"
-                                          Height="35"
+                                          Style="{StaticResource AccountComboBoxStyle}"
+                                          Height="42"
                                           Margin="0,0,0,10"/>
                                 
                                 <Button Name="btnAccount2Create"
@@ -367,12 +426,14 @@
                                   Foreground="{StaticResource MatteDarkBlueBrush}"
                                   Margin="0,0,0,15">
                             <StackPanel Margin="10">
-                                <TextBlock Text="Сумма операции:" 
+                                <TextBlock Text="Сумма операции (₽):" 
                                            FontSize="12"
                                            Margin="0,5,0,5"/>
                                 <TextBox Name="txtAccount2Amount"
-                                         Style="{StaticResource InputTextBoxStyle}"
-                                         Height="35"
+                                         Style="{StaticResource AccountInputTextBoxStyle}"
+                                         Height="42"
+                                         PreviewTextInput="txtAccount2Amount_PreviewTextInput"
+                                         PreviewKeyDown="txtAccount2Amount_PreviewKeyDown"
                                          Margin="0,0,0,10"/>
                                 
                                 <Grid>
@@ -469,6 +530,103 @@
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>
+                </Border>
+                
+                <!-- Секция перевода средств между счетами -->
+                <Border Grid.Row="1" 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="3"
+                        BorderBrush="{StaticResource MatteDarkBlueBrush}"
+                        BorderThickness="2"
+                        CornerRadius="8"
+                        Padding="20"
+                        Background="{StaticResource WhiteBrush}"
+                        Margin="0,20,0,0">
+                    <GroupBox Header="Перевод средств между счетами"
+                              FontSize="16"
+                              FontWeight="Bold"
+                              Foreground="{StaticResource MatteDarkBlueBrush}"
+                              Margin="0">
+                        <StackPanel Margin="15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="15"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           Text="Счет отправитель:"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="0" Grid.Column="2"
+                                          Name="cmbTransferFrom"
+                                          FontSize="12"
+                                          Padding="8,5"
+                                          Height="35"
+                                          Margin="0,0,0,0">
+                                    <ComboBoxItem Content="Счет 1" Tag="Account1"/>
+                                    <ComboBoxItem Content="Счет 2" Tag="Account2"/>
+                                </ComboBox>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="0"
+                                           Text="Счет получатель:"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="2" Grid.Column="2"
+                                          Name="cmbTransferTo"
+                                          FontSize="12"
+                                          Padding="8,5"
+                                          Height="35"
+                                          Margin="0,0,0,0">
+                                    <ComboBoxItem Content="Счет 1" Tag="Account1"/>
+                                    <ComboBoxItem Content="Счет 2" Tag="Account2"/>
+                                </ComboBox>
+                                
+                                <TextBlock Grid.Row="4" Grid.Column="0"
+                                           Text="Сумма перевода (₽):"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="4" Grid.Column="2"
+                                         Name="txtTransferAmount"
+                                         Style="{StaticResource AccountInputTextBoxStyle}"
+                                         Height="42"
+                                         PreviewTextInput="txtTransferAmount_PreviewTextInput"
+                                         PreviewKeyDown="txtTransferAmount_PreviewKeyDown"
+                                         Margin="0,0,0,0"/>
+                                
+                                <Button Grid.Row="4" Grid.Column="4"
+                                        Name="btnTransfer"
+                                        Content="Выполнить перевод"
+                                        Style="{StaticResource MenuButtonStyle}"
+                                        FontSize="14"
+                                        Padding="20,10"
+                                        Height="40"
+                                        Click="btnTransfer_Click"
+                                        HorizontalAlignment="Stretch"/>
+                            </Grid>
+                            
+                            <TextBlock Name="lblTransferResult"
+                                       FontSize="12"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,15,0,0"
+                                       HorizontalAlignment="Center"
+                                       TextAlignment="Center"/>
+                        </StackPanel>
+                    </GroupBox>
                 </Border>
             </Grid>
         </ScrollViewer>
