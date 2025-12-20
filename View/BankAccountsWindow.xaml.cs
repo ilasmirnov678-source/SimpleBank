@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using SimpleBank.Models;
+using SimpleBank.Services;
 
 namespace SimpleBank.View
 {
@@ -20,11 +21,18 @@ namespace SimpleBank.View
         private BankAccount _account1;
         private BankAccount _account2;
         private List<Client> _clients;
+        private JsonDataService _dataService;
+        private BankData _bankData;
 
         public BankAccountsWindow()
         {
             InitializeComponent();
+            _dataService = new JsonDataService();
+            _bankData = new BankData();
+            LoadData();
             InitializeControls();
+            UpdateAccount1Info();
+            UpdateAccount2Info();
             UpdateButtonsState();
         }
         
@@ -58,19 +66,23 @@ namespace SimpleBank.View
             cmbAccount2Status.ItemsSource = Enum.GetValues(typeof(AccountStatus));
             cmbAccount2Status.SelectedIndex = 0;
 
-            _clients = new List<Client>
+            // Если клиенты не загружены из JSON, используем список по умолчанию
+            if (_clients == null || _clients.Count == 0)
             {
-                new Client("Кузьмин Олег Иванович", "1234 567890", new DateTime(1988, 3, 15)),
-                new Client("Смирнова Анна Петровна", "2345 678901", new DateTime(1992, 7, 22)),
-                new Client("Волков Дмитрий Сергеевич", "3456 789012", new DateTime(1985, 11, 8)),
-                new Client("Новикова Елена Викторовна", "4567 890123", new DateTime(1990, 1, 30)),
-                new Client("Федоров Максим Александрович", "5678 901234", new DateTime(1987, 9, 14)),
-                new Client("Путин Владимир Владимирович", "0001 000001", new DateTime(1952, 10, 7)),
-                new Client("Эйнштейн Альберт", "9999 999999", new DateTime(1879, 3, 14)),
-                new Client("Гейтс Билл", "8888 888888", new DateTime(1955, 10, 28)),
-                new Client("Маск Илон", "7777 777777", new DateTime(1971, 6, 28)),
-                new Client("Безос Джефф", "6666 666666", new DateTime(1964, 1, 12))
-            };
+                _clients = new List<Client>
+                {
+                    new Client("Кузьмин Олег Иванович", "1234 567890", new DateTime(1988, 3, 15)),
+                    new Client("Смирнова Анна Петровна", "2345 678901", new DateTime(1992, 7, 22)),
+                    new Client("Волков Дмитрий Сергеевич", "3456 789012", new DateTime(1985, 11, 8)),
+                    new Client("Новикова Елена Викторовна", "4567 890123", new DateTime(1990, 1, 30)),
+                    new Client("Федоров Максим Александрович", "5678 901234", new DateTime(1987, 9, 14)),
+                    new Client("Путин Владимир Владимирович", "0001 000001", new DateTime(1952, 10, 7)),
+                    new Client("Эйнштейн Альберт", "9999 999999", new DateTime(1879, 3, 14)),
+                    new Client("Гейтс Билл", "8888 888888", new DateTime(1955, 10, 28)),
+                    new Client("Маск Илон", "7777 777777", new DateTime(1971, 6, 28)),
+                    new Client("Безос Джефф", "6666 666666", new DateTime(1964, 1, 12))
+                };
+            }
 
             cmbAccount1Owner.ItemsSource = _clients;
             cmbAccount1Owner.DisplayMemberPath = "FullName";
@@ -86,6 +98,93 @@ namespace SimpleBank.View
             cmbTransferTo.SelectedIndex = 1;
         }
 
+        // Метод загрузки данных из JSON
+        private void LoadData()
+        {
+            try
+            {
+                string filePath = _dataService.GetDataFilePath();
+                _bankData = _dataService.LoadFromJson(filePath);
+
+                // Загружаем клиентов
+                if (_bankData.Clients != null && _bankData.Clients.Count > 0)
+                {
+                    _clients = _bankData.Clients;
+                }
+
+                // Загружаем счета и восстанавливаем связи с клиентами
+                if (_bankData.Accounts != null && _bankData.Accounts.Count > 0)
+                {
+                    foreach (var account in _bankData.Accounts)
+                    {
+                        // Восстанавливаем связь с клиентом по паспортным данным
+                        if (!string.IsNullOrEmpty(account.OwnerPassportData) && _clients != null)
+                        {
+                            account.Owner = _clients.FirstOrDefault(c => c.PassportData == account.OwnerPassportData);
+                        }
+                    }
+
+                    // Присваиваем первые два счета для UI
+                    if (_bankData.Accounts.Count > 0)
+                    {
+                        _account1 = _bankData.Accounts[0];
+                    }
+                    if (_bankData.Accounts.Count > 1)
+                    {
+                        _account2 = _bankData.Accounts[1];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}", 
+                    "Ошибка загрузки", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Warning);
+                
+                // Инициализируем пустые данные при ошибке
+                _bankData = new BankData();
+                _clients = new List<Client>();
+            }
+        }
+
+        // Метод сохранения данных в JSON
+        private void SaveData()
+        {
+            try
+            {
+                // Собираем все счета в список
+                List<BankAccount> accounts = new List<BankAccount>();
+                if (_account1 != null)
+                {
+                    // Устанавливаем OwnerPassportData для сериализации
+                    _account1.OwnerPassportData = _account1.Owner?.PassportData ?? string.Empty;
+                    accounts.Add(_account1);
+                }
+                if (_account2 != null)
+                {
+                    // Устанавливаем OwnerPassportData для сериализации
+                    _account2.OwnerPassportData = _account2.Owner?.PassportData ?? string.Empty;
+                    accounts.Add(_account2);
+                }
+
+                // Обновляем данные для сохранения
+                _bankData.Clients = _clients ?? new List<Client>();
+                _bankData.Accounts = accounts;
+
+                // Сохраняем в JSON
+                string filePath = _dataService.GetDataFilePath();
+                _dataService.SaveToJson(_bankData, filePath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении данных: {ex.Message}", 
+                    "Ошибка сохранения", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
+            }
+        }
+
         // Метод обработки кнопки "Назад"
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
@@ -98,6 +197,7 @@ namespace SimpleBank.View
         {
             if (_isBackButtonClicked)
             {
+                SaveData();
                 return;
             }
 
@@ -110,6 +210,10 @@ namespace SimpleBank.View
             if (result == MessageBoxResult.No)
             {
                 e.Cancel = true;
+            }
+            else
+            {
+                SaveData();
             }
         }
 
@@ -179,6 +283,7 @@ namespace SimpleBank.View
                 UpdateAccount1Info();
                 ResetAccountFieldsHighlight(1);
                 UpdateButtonsState();
+                SaveData();
 
                 MessageBox.Show("Счет успешно создан!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -212,6 +317,7 @@ namespace SimpleBank.View
             {
                 UpdateAccount1Info();
                 txtAccount1Amount.Text = "";
+                SaveData();
                 MessageBox.Show($"Счет успешно пополнен на {FormatMoney(amount)}!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
@@ -244,6 +350,7 @@ namespace SimpleBank.View
             {
                 UpdateAccount1Info();
                 txtAccount1Amount.Text = "";
+                SaveData();
                 MessageBox.Show($"Со счета успешно снято {FormatMoney(amount)}!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
@@ -275,6 +382,7 @@ namespace SimpleBank.View
             _account1.Balance = 0;
             _account1.UpdateStatus();
             UpdateAccount1Info();
+            SaveData();
             MessageBox.Show("Баланс счета обнулен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -408,6 +516,7 @@ namespace SimpleBank.View
                 UpdateAccount2Info();
                 ResetAccountFieldsHighlight(2);
                 UpdateButtonsState();
+                SaveData();
 
                 MessageBox.Show("Счет успешно создан!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -439,6 +548,7 @@ namespace SimpleBank.View
             {
                 UpdateAccount2Info();
                 txtAccount2Amount.Text = "";
+                SaveData();
                 MessageBox.Show($"Счет успешно пополнен на {FormatMoney(amount)}!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
@@ -471,6 +581,7 @@ namespace SimpleBank.View
             {
                 UpdateAccount2Info();
                 txtAccount2Amount.Text = "";
+                SaveData();
                 MessageBox.Show($"Со счета успешно снято {FormatMoney(amount)}!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
@@ -502,6 +613,7 @@ namespace SimpleBank.View
             _account2.Balance = 0;
             _account2.UpdateStatus();
             UpdateAccount2Info();
+            SaveData();
             MessageBox.Show("Баланс счета обнулен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -620,6 +732,7 @@ namespace SimpleBank.View
                     UpdateAccount1Info();
                     UpdateAccount2Info();
                     txtTransferAmount.Text = "";
+                    SaveData();
                     
                     string fromAccountName = (fromTag == "Account1") ? "Счет 1" : "Счет 2";
                     string toAccountName = (toTag == "Account1") ? "Счет 1" : "Счет 2";
