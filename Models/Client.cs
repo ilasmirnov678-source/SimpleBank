@@ -1,26 +1,31 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace SimpleBank.Models
 {
     // Класс клиента банка
+    [DataContract]
     public class Client
     {
         private string _fullName;
         private string _passportData;
         private DateTime _dateOfBirth;
 
+        [DataMember]
         public string FullName
         {
             get { return _fullName; }
             set { _fullName = value; }
         }
 
+        [DataMember]
         public string PassportData
         {
             get { return _passportData; }
             set { _passportData = value; }
         }
 
+        [DataMember]
         public DateTime DateOfBirth
         {
             get { return _dateOfBirth; }

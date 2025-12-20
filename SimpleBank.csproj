@@ -55,6 +55,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -129,7 +130,9 @@
     </Compile>
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\BankAccount.cs" />
+    <Compile Include="Models\BankData.cs" />
     <Compile Include="Models\BankClassesTest.cs" />
+    <Compile Include="Services\JsonDataService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

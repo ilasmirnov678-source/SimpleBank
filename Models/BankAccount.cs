@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace SimpleBank.Models
 {
@@ -11,45 +12,72 @@ namespace SimpleBank.Models
     }
 
     // Класс банковского счета
+    [DataContract]
     public class BankAccount
     {
         private string _accountNumber;
         private DateTime _openingDate;
         private Client _owner;
+        private string _ownerPassportData;
         private decimal _balance;
         private int _depositTermDays;
         private AccountStatus _status;
 
+        [DataMember]
         public string AccountNumber
         {
             get { return _accountNumber; }
             set { _accountNumber = value; }
         }
 
+        [DataMember]
         public DateTime OpeningDate
         {
             get { return _openingDate; }
             set { _openingDate = value; }
         }
 
+        // Свойство Owner не помечено [DataMember] - не сериализуется
+        // Для сериализации используется OwnerPassportData
         public Client Owner
         {
             get { return _owner; }
             set { _owner = value; }
         }
 
+        // Паспортные данные владельца для сериализации
+        // Используется для сохранения связи счета с клиентом при сериализации
+        [DataMember]
+        public string OwnerPassportData
+        {
+            get 
+            { 
+                // При получении, если Owner установлен, возвращаем его паспортные данные
+                // Иначе возвращаем сохраненное значение
+                if (_owner != null && !string.IsNullOrEmpty(_owner.PassportData))
+                {
+                    return _owner.PassportData;
+                }
+                return _ownerPassportData ?? string.Empty;
+            }
+            set { _ownerPassportData = value; }
+        }
+
+        [DataMember]
         public decimal Balance
         {
             get { return _balance; }
             set { _balance = value; }
         }
 
+        [DataMember]
         public int DepositTermDays
         {
             get { return _depositTermDays; }
             set { _depositTermDays = value; }
         }
 
+        [DataMember]
         public AccountStatus Status
         {
             get { return _status; }
