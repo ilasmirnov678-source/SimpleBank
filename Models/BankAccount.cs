@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SimpleBank.Models
@@ -22,6 +24,7 @@ namespace SimpleBank.Models
         private decimal _balance;
         private int _depositTermDays;
         private AccountStatus _status;
+        private List<Transaction> _transactionHistory;
 
         [DataMember]
         public string AccountNumber
@@ -84,6 +87,13 @@ namespace SimpleBank.Models
             set { _status = value; }
         }
 
+        [DataMember]
+        public List<Transaction> TransactionHistory
+        {
+            get { return _transactionHistory; }
+            set { _transactionHistory = value; }
+        }
+
         public BankAccount()
         {
             _accountNumber = string.Empty;
@@ -92,6 +102,7 @@ namespace SimpleBank.Models
             _balance = 0;
             _depositTermDays = 0;
             _status = AccountStatus.Open;
+            _transactionHistory = new List<Transaction>();
         }
 
         public BankAccount(string accountNumber, DateTime openingDate, Client owner, decimal balance, int depositTermDays, AccountStatus status)
@@ -102,6 +113,7 @@ namespace SimpleBank.Models
             _balance = balance;
             _depositTermDays = depositTermDays;
             _status = status;
+            _transactionHistory = new List<Transaction>();
         }
 
         // Метод расчета даты окончания вклада
@@ -149,6 +161,16 @@ namespace SimpleBank.Models
 
             _balance += amount;
             UpdateStatusByBalance();
+
+            // Добавляем транзакцию в историю
+            Transaction transaction = new Transaction(
+                _accountNumber,
+                TransactionType.Deposit,
+                amount,
+                $"Пополнение счета на сумму {amount:F2} ₽"
+            );
+            AddTransaction(transaction);
+
             return true;
         }
 
@@ -172,6 +194,16 @@ namespace SimpleBank.Models
 
             _balance -= amount;
             UpdateStatusByBalance();
+
+            // Добавляем транзакцию в историю
+            Transaction transaction = new Transaction(
+                _accountNumber,
+                TransactionType.Withdraw,
+                amount,
+                $"Снятие со счета суммы {amount:F2} ₽"
+            );
+            AddTransaction(transaction);
+
             return true;
         }
 
@@ -203,20 +235,95 @@ namespace SimpleBank.Models
                 return false;
             }
 
+            // Сначала снимаем средства (это добавит транзакцию Withdraw)
+            // Но нам нужна транзакция Transfer, поэтому удалим последнюю транзакцию и добавим правильную
             bool withdrawResult = this.Withdraw(amount);
             if (!withdrawResult)
             {
                 return false;
             }
 
+            // Удаляем последнюю транзакцию Withdraw и заменяем на Transfer
+            if (_transactionHistory != null && _transactionHistory.Count > 0)
+            {
+                _transactionHistory.RemoveAt(_transactionHistory.Count - 1);
+            }
+
+            // Добавляем транзакцию перевода для исходного счета
+            Transaction transferTransaction = new Transaction(
+                _accountNumber,
+                TransactionType.Transfer,
+                amount,
+                $"Перевод на счет {targetAccount.AccountNumber}",
+                targetAccount.AccountNumber
+            );
+            AddTransaction(transferTransaction);
+
+            // Пополняем целевой счет (это добавит транзакцию Deposit)
+            // Но нам нужна транзакция Transfer, поэтому удалим последнюю транзакцию и добавим правильную
             bool depositResult = targetAccount.Deposit(amount);
             if (!depositResult)
             {
+                // Откатываем операцию
                 this.Deposit(amount);
+                if (_transactionHistory != null && _transactionHistory.Count > 0)
+                {
+                    _transactionHistory.RemoveAt(_transactionHistory.Count - 1);
+                }
+                Transaction withdrawTransaction = new Transaction(
+                    _accountNumber,
+                    TransactionType.Withdraw,
+                    amount,
+                    $"Снятие со счета суммы {amount:F2} ₽"
+                );
+                AddTransaction(withdrawTransaction);
                 return false;
             }
 
+            // Удаляем последнюю транзакцию Deposit и заменяем на Transfer
+            if (targetAccount.TransactionHistory != null && targetAccount.TransactionHistory.Count > 0)
+            {
+                targetAccount.TransactionHistory.RemoveAt(targetAccount.TransactionHistory.Count - 1);
+            }
+
+            // Добавляем транзакцию получения для целевого счета
+            Transaction receiveTransaction = new Transaction(
+                targetAccount.AccountNumber,
+                TransactionType.Transfer,
+                amount,
+                $"Перевод со счета {_accountNumber}",
+                _accountNumber
+            );
+            targetAccount.AddTransaction(receiveTransaction);
+
             return true;
+        }
+
+        // Метод добавления транзакции в историю
+        public void AddTransaction(Transaction transaction)
+        {
+            if (transaction == null)
+            {
+                return;
+            }
+
+            if (_transactionHistory == null)
+            {
+                _transactionHistory = new List<Transaction>();
+            }
+
+            _transactionHistory.Add(transaction);
+        }
+
+        // Метод получения истории транзакций
+        public List<Transaction> GetTransactionHistory()
+        {
+            if (_transactionHistory == null)
+            {
+                _transactionHistory = new List<Transaction>();
+            }
+
+            return _transactionHistory.OrderByDescending(t => t.TransactionDate).ToList();
         }
 
         // Метод вывода информации о счете

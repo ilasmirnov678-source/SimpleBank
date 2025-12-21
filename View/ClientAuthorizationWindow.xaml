@@ -1,0 +1,116 @@
+<Window x:Class="SimpleBank.View.ClientAuthorizationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Авторизация клиента" 
+        Height="600" 
+        Width="650"
+        MinHeight="580"
+        MinWidth="600"
+        WindowStartupLocation="CenterScreen"
+        Icon="pack://application:,,,/Resources/icon.ico"
+        Closing="Window_Closing">
+    <Grid Background="{StaticResource WhiteBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Заголовок с кнопкой "Назад" -->
+        <Border Grid.Row="0" 
+                Background="{StaticResource MatteBlueBrush}" 
+                Padding="20,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Column="0"
+                           Text="Авторизация клиента"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource WhiteBrush}"
+                           VerticalAlignment="Center"/>
+                
+                <Button Grid.Column="1"
+                        Name="btnBack"
+                        Content="Назад"
+                        Style="{StaticResource BackButtonStyle}"
+                        Click="btnBack_Click"
+                        Width="100"/>
+            </Grid>
+        </Border>
+        
+        <!-- Область с логотипом -->
+        <Border Grid.Row="1" 
+                Background="{StaticResource MatteLightBlueBrush}" 
+                Padding="20,20">
+            <StackPanel HorizontalAlignment="Center">
+                <Image Source="pack://application:,,,/Resources/logo.png" 
+                       Width="160" 
+                       Height="80"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- Основная область с полями ввода -->
+        <Grid Grid.Row="2" 
+              Margin="50,30"
+              VerticalAlignment="Center">
+            <StackPanel>
+                <!-- Поле паспортных данных -->
+                <TextBlock Text="Введите паспортные данные:"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource MatteDarkBlueBrush}"
+                           Margin="0,0,0,8"/>
+                <TextBox Name="txtPassportData"
+                         Style="{StaticResource InputTextBoxStyle}"
+                         Height="42"
+                         Margin="0,0,0,15"
+                         KeyDown="txtPassportData_KeyDown"
+                         PreviewKeyDown="txtPassportData_PreviewKeyDown"/>
+                
+                <!-- Поле PIN-кода -->
+                <TextBlock Text="Введите PIN-код:"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource MatteDarkBlueBrush}"
+                           Margin="0,0,0,8"/>
+                <PasswordBox Name="txtPinCode"
+                             Style="{StaticResource InputPasswordBoxStyle}"
+                             Height="42"
+                             Margin="0,0,0,20"
+                             KeyDown="txtPinCode_KeyDown"
+                             PreviewKeyDown="txtPinCode_PreviewKeyDown"/>
+                
+                <!-- Кнопка "Войти" -->
+                <Button Name="btnLogin"
+                        Content="Войти"
+                        Style="{StaticResource LoginButtonStyle}"
+                        Click="btnLogin_Click"
+                        HorizontalAlignment="Stretch"
+                        Height="45"
+                        Margin="0,5,0,0"/>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Подвал -->
+        <Border Grid.Row="3" 
+                Background="{StaticResource MatteLightBlueBrush}" 
+                Padding="20,15">
+            <TextBlock Text="Банковское приложение SPBKIT Bank"
+                       FontSize="12"
+                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</Window>
+

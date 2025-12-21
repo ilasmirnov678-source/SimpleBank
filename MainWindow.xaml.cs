@@ -20,9 +20,19 @@ namespace SimpleBank
         {
             try
             {
-                UserInformationWindow userInfoWindow = new UserInformationWindow();
+                // Открываем окно авторизации клиента
+                ClientAuthorizationWindow authWindow = new ClientAuthorizationWindow();
                 this.Hide();
-                userInfoWindow.ShowDialog();
+                
+                bool? authResult = authWindow.ShowDialog();
+                
+                // Если авторизация успешна, открываем окно информации для клиента
+                if (authResult == true && authWindow.CurrentAccount != null)
+                {
+                    UserInformationWindow userInfoWindow = new UserInformationWindow(authWindow.CurrentAccount);
+                    userInfoWindow.ShowDialog();
+                }
+                
                 this.Show();
             }
             catch (Exception ex)

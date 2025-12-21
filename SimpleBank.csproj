@@ -86,6 +86,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\AccountDetailsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ClientAuthorizationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\BankEmployeeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -116,6 +124,12 @@
     <Compile Include="View\UserInformationWindow.xaml.cs">
       <DependentUpon>UserInformationWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\AccountDetailsWindow.xaml.cs">
+      <DependentUpon>AccountDetailsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ClientAuthorizationWindow.xaml.cs">
+      <DependentUpon>ClientAuthorizationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\BankEmployeeWindow.xaml.cs">
       <DependentUpon>BankEmployeeWindow.xaml</DependentUpon>
     </Compile>
@@ -129,10 +143,13 @@
       <DependentUpon>BankAccountsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ClientAccount.cs" />
     <Compile Include="Models\BankAccount.cs" />
     <Compile Include="Models\BankData.cs" />
+    <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\BankClassesTest.cs" />
     <Compile Include="Services\JsonDataService.cs" />
+    <Compile Include="Services\ClientAccountService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

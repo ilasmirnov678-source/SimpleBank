@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Информация для клиента" 
-        Height="650" 
-        Width="850"
+        Height="700" 
+        Width="900"
         MinHeight="600"
         MinWidth="750"
+        SizeToContent="Manual"
         WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/Resources/icon.ico"
         Closing="Window_Closing">
@@ -65,33 +66,762 @@
             </StackPanel>
         </Border>
         
-        <!-- Основная область с информацией -->
-        <Grid Grid.Row="2" 
-              Margin="40,30"
-              VerticalAlignment="Top">
-            <StackPanel>
-                <TextBlock Text="Добро пожаловать в информационный раздел банка!"
-                           FontSize="16"
-                           FontWeight="SemiBold"
-                           Foreground="{StaticResource MatteDarkBlueBrush}"
-                           TextWrapping="Wrap"
-                           Margin="0,0,0,20"
-                           HorizontalAlignment="Center"
-                           TextAlignment="Center"/>
-                
-                <TextBlock Text="Если бы это был настоящий банк, то здесь была бы размещена информация для клиента:"
-                           FontSize="14"
-                           Foreground="#666666"
-                           TextWrapping="Wrap"
-                           Margin="0,0,0,15"/>
-                
-                <TextBlock Text="• Просмотр баланса счетов&#x0a;• История операций и транзакций&#x0a;• Информация о вкладах и кредитах&#x0a;• Курсы валют&#x0a;• Контактная информация банка"
-                           FontSize="14"
-                           Foreground="#666666"
-                           TextWrapping="Wrap"
-                           Margin="20,0,0,0"/>
-            </StackPanel>
-        </Grid>
+        <!-- Основная область с TabControl -->
+        <TabControl Grid.Row="2" 
+                    Margin="20,20"
+                    Background="{StaticResource WhiteBrush}">
+            
+            <!-- Вкладка "Мои счета" -->
+            <TabItem Header="Мои счета">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Панель фильтров -->
+                    <Border Grid.Row="0"
+                            Background="#F5F5F5"
+                            BorderBrush="#CCCCCC"
+                            BorderThickness="1"
+                            Padding="15,10"
+                            Margin="0,0,0,10"
+                            CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Метка для фильтра по статусу -->
+                            <TextBlock Grid.Column="0"
+                                       Text="Статус:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            
+                            <!-- ComboBox для фильтрации по статусу -->
+                            <ComboBox Grid.Column="1"
+                                      Name="cmbStatusFilter"
+                                      FontSize="14"
+                                      Height="35"
+                                      Margin="0,0,20,0"
+                                      SelectionChanged="cmbStatusFilter_SelectionChanged">
+                                <ComboBoxItem Content="Все" Tag="All" IsSelected="True"/>
+                                <ComboBoxItem Content="Открыт" Tag="Open"/>
+                                <ComboBoxItem Content="Закрыт" Tag="Closed"/>
+                                <ComboBoxItem Content="Банкрот" Tag="Bankrupt"/>
+                            </ComboBox>
+                            
+                            <!-- Метка для поиска -->
+                            <TextBlock Grid.Column="2"
+                                       Text="Поиск:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            
+                            <!-- TextBox для поиска по номеру счета -->
+                            <TextBox Grid.Column="3"
+                                     Name="txtSearchAccount"
+                                     FontSize="14"
+                                     Height="35"
+                                     Margin="0,0,10,0"
+                                     TextChanged="txtSearchAccount_TextChanged"
+                                     VerticalContentAlignment="Center"
+                                     Padding="10,0">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            
+                            <!-- Кнопка "Сбросить фильтры" -->
+                            <Button Grid.Column="4"
+                                    Name="btnResetFilters"
+                                    Content="Сбросить"
+                                    Width="120"
+                                    Height="35"
+                                    Margin="0,0,10,0"
+                                    Click="btnResetFilters_Click"/>
+                            
+                            <!-- Кнопка обновления -->
+                            <Button Grid.Column="5"
+                                    Name="btnRefreshAccounts"
+                                    Content="Обновить"
+                                    Width="120"
+                                    Height="35"
+                                    Click="btnRefreshAccounts_Click"/>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Панель статистики -->
+                    <Border Grid.Row="1"
+                            Background="#E8F4F8"
+                            BorderBrush="#B0D4E8"
+                            BorderThickness="1"
+                            Padding="15,12"
+                            Margin="0,0,0,10"
+                            CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Общее количество счетов -->
+                            <StackPanel Grid.Column="0" 
+                                        HorizontalAlignment="Center">
+                                <TextBlock Text="Всего счетов:"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="#666666"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,5"/>
+                                <TextBlock Name="txtTotalAccounts"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource MatteDarkBlueBrush}"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <!-- Общий баланс -->
+                            <StackPanel Grid.Column="1" 
+                                        HorizontalAlignment="Center">
+                                <TextBlock Text="Общий баланс:"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="#666666"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,5"/>
+                                <TextBlock Name="txtTotalBalance"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Foreground="#0066CC"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <!-- Открытые счета -->
+                            <StackPanel Grid.Column="2" 
+                                        HorizontalAlignment="Center">
+                                <TextBlock Text="Открытых:"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="#666666"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,5"/>
+                                <TextBlock Name="txtOpenAccounts"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Foreground="#009900"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <!-- Закрытые счета -->
+                            <StackPanel Grid.Column="3" 
+                                        HorizontalAlignment="Center">
+                                <TextBlock Text="Закрытых:"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="#666666"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,5"/>
+                                <TextBlock Name="txtClosedAccounts"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Foreground="#808080"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <!-- Средний баланс -->
+                            <StackPanel Grid.Column="4" 
+                                        HorizontalAlignment="Center">
+                                <TextBlock Text="Средний баланс:"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="#666666"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,5"/>
+                                <TextBlock Name="txtAverageBalance"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Foreground="#0066CC"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- DataGrid для отображения счетов -->
+                    <DataGrid Grid.Row="3"
+                              Name="dgAccounts"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="All"
+                              AlternatingRowBackground="#F5F5F5"
+                              Background="{StaticResource WhiteBrush}"
+                              BorderBrush="#CCCCCC"
+                              BorderThickness="1"
+                              MouseDoubleClick="dgAccounts_MouseDoubleClick"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              CanUserResizeColumns="True"
+                              CanUserReorderColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер счета" 
+                                                Binding="{Binding AccountNumber}" 
+                                                Width="150"/>
+                            <DataGridTextColumn Header="Дата открытия" 
+                                                Binding="{Binding OpeningDate, StringFormat=dd.MM.yyyy}" 
+                                                Width="120"/>
+                            <DataGridTextColumn Header="Баланс" 
+                                                Binding="{Binding Balance, StringFormat='{}{0:F2} ₽'}" 
+                                                Width="130"/>
+                            <DataGridTemplateColumn Header="Статус" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="3" 
+                                                Padding="8,4" 
+                                                HorizontalAlignment="Center"
+                                                Background="{Binding StatusColor}">
+                                            <TextBlock Text="{Binding Status}" 
+                                                       FontWeight="SemiBold"
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Срок вклада (дни)" 
+                                                Binding="{Binding DepositTermDays}" 
+                                                Width="130"/>
+                            <DataGridTextColumn Header="Дата окончания вклада" 
+                                                Binding="{Binding DepositEndDate, StringFormat=dd.MM.yyyy}" 
+                                                Width="150"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка "Информация о клиенте" -->
+            <TabItem Header="Информация о клиенте">
+                <Grid Margin="20">
+                    <StackPanel>
+                        <TextBlock Text="Личные данные"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource MatteDarkBlueBrush}"
+                                   Margin="0,0,0,20"/>
+                        
+                        <!-- ФИО -->
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="ФИО:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"/>
+                            <TextBlock Grid.Column="1"
+                                       Name="txtFullName"
+                                       FontSize="14"
+                                       Foreground="#333333"
+                                       TextWrapping="Wrap"/>
+                        </Grid>
+                        
+                        <!-- Паспортные данные -->
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Паспортные данные:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"/>
+                            <TextBlock Grid.Column="1"
+                                       Name="txtPassportData"
+                                       FontSize="14"
+                                       Foreground="#333333"/>
+                        </Grid>
+                        
+                        <!-- Дата рождения -->
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Дата рождения:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"/>
+                            <TextBlock Grid.Column="1"
+                                       Name="txtDateOfBirth"
+                                       FontSize="14"
+                                       Foreground="#333333"/>
+                        </Grid>
+                        
+                        <!-- Кнопка "Выйти из аккаунта" -->
+                        <Button Name="btnLogout"
+                                Content="Выйти из аккаунта"
+                                HorizontalAlignment="Left"
+                                Width="200"
+                                Height="40"
+                                Margin="0,20,0,0"
+                                Click="btnLogout_Click"
+                                Visibility="Collapsed"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка "История операций" -->
+            <TabItem Header="История операций">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Панель фильтров для истории операций -->
+                    <Border Grid.Row="0"
+                            Background="#F5F5F5"
+                            BorderBrush="#CCCCCC"
+                            BorderThickness="1"
+                            Padding="15,10"
+                            Margin="0,0,0,10"
+                            CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Метка для фильтра по типу операции -->
+                            <TextBlock Grid.Column="0"
+                                       Text="Тип:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            
+                            <!-- ComboBox для фильтрации по типу операции -->
+                            <ComboBox Grid.Column="1"
+                                      Name="cmbTransactionTypeFilter"
+                                      FontSize="14"
+                                      Height="35"
+                                      Margin="0,0,20,0"
+                                      SelectionChanged="cmbTransactionTypeFilter_SelectionChanged">
+                                <ComboBoxItem Content="Все" Tag="All" IsSelected="True"/>
+                                <ComboBoxItem Content="Пополнение" Tag="Deposit"/>
+                                <ComboBoxItem Content="Снятие" Tag="Withdraw"/>
+                                <ComboBoxItem Content="Перевод" Tag="Transfer"/>
+                            </ComboBox>
+                            
+                            <!-- Метка для фильтра по дате от -->
+                            <TextBlock Grid.Column="2"
+                                       Text="Дата от:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            
+                            <!-- DatePicker для даты от -->
+                            <DatePicker Grid.Column="3"
+                                        Name="dpDateFrom"
+                                        FontSize="14"
+                                        Height="35"
+                                        Margin="0,0,20,0"
+                                        SelectedDateChanged="dpDateFrom_SelectedDateChanged"/>
+                            
+                            <!-- Метка для фильтра по дате до -->
+                            <TextBlock Grid.Column="4"
+                                       Text="Дата до:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            
+                            <!-- DatePicker для даты до -->
+                            <DatePicker Grid.Column="5"
+                                        Name="dpDateTo"
+                                        FontSize="14"
+                                        Height="35"
+                                        Margin="0,0,20,0"
+                                        SelectedDateChanged="dpDateTo_SelectedDateChanged"/>
+                            
+                            <!-- Метка для фильтра по сумме от -->
+                            <TextBlock Grid.Column="6"
+                                       Text="Сумма от:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            
+                            <!-- TextBox для суммы от -->
+                            <TextBox Grid.Column="7"
+                                     Name="txtAmountFrom"
+                                     FontSize="14"
+                                     Height="35"
+                                     Margin="0,0,20,0"
+                                     TextChanged="txtAmountFrom_TextChanged"
+                                     VerticalContentAlignment="Center"
+                                     Padding="10,0">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            
+                            <!-- Метка для фильтра по сумме до -->
+                            <TextBlock Grid.Column="8"
+                                       Text="Сумма до:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            
+                            <!-- TextBox для суммы до -->
+                            <TextBox Grid.Column="9"
+                                     Name="txtAmountTo"
+                                     FontSize="14"
+                                     Height="35"
+                                     TextChanged="txtAmountTo_TextChanged"
+                                     VerticalContentAlignment="Center"
+                                     Padding="10,0">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- DataGrid для отображения операций -->
+                    <DataGrid Grid.Row="1"
+                              Name="dgTransactions"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="All"
+                              AlternatingRowBackground="#F5F5F5"
+                              Background="{StaticResource WhiteBrush}"
+                              BorderBrush="#CCCCCC"
+                              BorderThickness="1"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              CanUserResizeColumns="True"
+                              CanUserReorderColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата и время" 
+                                                Binding="{Binding TransactionDate, StringFormat=dd.MM.yyyy HH:mm:ss}" 
+                                                Width="150"/>
+                            <DataGridTemplateColumn Header="Тип операции" Width="140">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" 
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding TransactionTypeIcon}" 
+                                                       FontSize="16"
+                                                       Margin="0,0,8,0"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding TransactionTypeString}" 
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Сумма" 
+                                                Binding="{Binding Amount, StringFormat='{}{0:F2} ₽'}" 
+                                                Width="130"/>
+                            <DataGridTextColumn Header="Описание" 
+                                                Binding="{Binding Description}" 
+                                                Width="*"/>
+                            <DataGridTextColumn Header="Целевой счет" 
+                                                Binding="{Binding TargetAccountNumber}" 
+                                                Width="150"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка "Переводы" -->
+            <TabItem Header="Переводы">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Заголовок -->
+                    <TextBlock Grid.Row="0"
+                               Text="Перевод средств на другой счет"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource MatteDarkBlueBrush}"
+                               Margin="0,0,0,30"/>
+                    
+                    <!-- Форма перевода -->
+                    <StackPanel Grid.Row="1"
+                                MaxWidth="500"
+                                HorizontalAlignment="Left">
+                        
+                        <!-- Выбор счета-источника -->
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Со счета:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1"
+                                      Name="cmbTransferFrom"
+                                      FontSize="14"
+                                      Height="35"
+                                      SelectionChanged="cmbTransferFrom_SelectionChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding AccountNumber}" 
+                                                       Margin="0,0,10,0"/>
+                                            <TextBlock Text="{Binding Balance, StringFormat='Баланс: {0:F2} ₽'}" 
+                                                       Foreground="#666666"
+                                                       FontSize="12"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <!-- Номер целевого счета -->
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="На счет:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1"
+                                     Name="txtTransferTo"
+                                     FontSize="14"
+                                     Height="35"
+                                     VerticalContentAlignment="Center"
+                                     Padding="10,0">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                        
+                        <!-- Сумма перевода -->
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Сумма:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"
+                                       VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1"
+                                     Name="txtTransferAmount"
+                                     FontSize="14"
+                                     Height="35"
+                                     VerticalContentAlignment="Center"
+                                     Padding="10,0"
+                                     PreviewTextInput="txtTransferAmount_PreviewTextInput">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                        
+                        <!-- Информация о балансе счета-источника -->
+                        <Border Background="#F0F8FF"
+                                BorderBrush="#B0D4E8"
+                                BorderThickness="1"
+                                Padding="15,10"
+                                Margin="0,0,0,20"
+                                CornerRadius="5"
+                                Name="borderSourceAccountInfo"
+                                Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="Информация о счете-источнике:"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource MatteDarkBlueBrush}"
+                                           Margin="0,0,0,5"/>
+                                <TextBlock Name="txtSourceAccountInfo"
+                                           FontSize="12"
+                                           Foreground="#333333"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- Кнопка перевода -->
+                        <Button Name="btnTransfer"
+                                Content="Выполнить перевод"
+                                Style="{StaticResource LoginButtonStyle}"
+                                Height="45"
+                                Click="btnTransfer_Click"
+                                Margin="0,0,0,15"/>
+                        
+                        <!-- Результат операции -->
+                        <Border Background="#F5F5F5"
+                                BorderBrush="#CCCCCC"
+                                BorderThickness="1"
+                                Padding="15,10"
+                                CornerRadius="5"
+                                Name="borderTransferResult"
+                                Visibility="Collapsed">
+                            <TextBlock Name="txtTransferResult"
+                                       FontSize="14"
+                                       Foreground="#333333"
+                                       TextWrapping="Wrap"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка "Контактная информация банка" -->
+            <TabItem Header="Контактная информация">
+                <Grid Margin="20">
+                    <StackPanel>
+                        <TextBlock Text="Контактная информация"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource MatteDarkBlueBrush}"
+                                   Margin="0,0,0,30"/>
+                        
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Название банка:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="SPBKIT Bank"
+                                       FontSize="14"
+                                       Foreground="#333333"/>
+                        </Grid>
+                        
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Телефон:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="+7 (812) 123-45-67"
+                                       FontSize="14"
+                                       Foreground="#333333"/>
+                        </Grid>
+                        
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Email:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="info@spbkitbank.ru"
+                                       FontSize="14"
+                                       Foreground="#333333"/>
+                        </Grid>
+                        
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Адрес:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="г. Санкт-Петербург, ул. Примерная, д. 1"
+                                       FontSize="14"
+                                       Foreground="#333333"/>
+                        </Grid>
+                        
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Режим работы:"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource MatteDarkBlueBrush}"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="Пн-Пт: 9:00 - 18:00"
+                                       FontSize="14"
+                                       Foreground="#333333"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
         
         <!-- Подвал -->
         <Border Grid.Row="3" 
